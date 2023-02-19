@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data);
 
@@ -29,10 +30,9 @@ int parse_next_method_handle(int index, const uint8_t *data);
 
 /**
  * Parse constant pool of given class file
- * the next byte to be read is returned
  *
- * @param data
- * @return
+ * @param data an array of bytes which represent the class file
+ * @return the index of the first byte which is not part of the constant pool
  */
 int parse_constant_pool(uint8_t data[]) {
     int const_pool_count = data[8] * 16 + data[9];
@@ -44,7 +44,7 @@ int parse_constant_pool(uint8_t data[]) {
         index = parse_next_constant_pool_entry(index, data);
     }
 
-    return index;
+    return index + 1;
 }
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data) {
