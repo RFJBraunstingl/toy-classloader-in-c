@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "parse_helpers.h"
+#include "helpers.h"
 
 int parse_interfaces(int index, const uint8_t data[]) {
     printf("parse_interfaces\n");
