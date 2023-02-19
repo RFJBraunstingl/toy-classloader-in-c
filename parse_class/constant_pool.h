@@ -40,7 +40,7 @@ int parse_constant_pool(uint8_t data[]) {
 
     int index = 9;
     for (int i = 1; i < const_pool_count; i++) {
-        printf("\nreading constant pool entry %d\n", i);
+        printf("reading constant pool entry %d\n", i);
         index = parse_next_constant_pool_entry(index, data);
     }
 
