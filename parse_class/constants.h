@@ -36,13 +36,13 @@ int parse_next_method_handle(int index, const uint8_t *data);
  */
 int parse_constant_pool(const uint8_t data[]) {
     int const_pool_count = data[8] * 16 + data[9];
-    printf("dealing with a constant pool of size (%d-1)\n", const_pool_count);
+    LOG_DEBUG("dealing with a constant pool of size (%d-1)\n", const_pool_count);
 
     int index = 9;
     for (int i = 1; i < const_pool_count; i++) {
-        printf("reading constant pool entry %d\n", i);
+        LOG_DEBUG("reading constant pool entry %d\n", i);
         index = parse_next_constant_pool_entry(index, data);
-        printf("\n");
+        LOG_DEBUG("\n");
     }
 
     return index + 1;
@@ -50,7 +50,7 @@ int parse_constant_pool(const uint8_t data[]) {
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data) {
     uint8_t tag = data[++index];
-    printf("constant has tag %d\n", tag);
+    LOG_DEBUG("constant has tag %d\n", tag);
 
     switch (tag) {
 
@@ -107,12 +107,12 @@ int parse_next_utf8(int index, const uint8_t *data)
     uint8_t length_msb = data[++index];
     uint8_t length_lsb = data[++index];
     int length = length_msb * 16 + length_lsb;
-    printf("length was %d\n", length);
+    LOG_DEBUG("length was %d\n", length);
 
     uint8_t utf8_const[length + 1];
     memcpy(&utf8_const, &data[index+1], length);
     utf8_const[length] = '\0';
-    printf("attempt to print utf8 as ascii: %s\n", utf8_const);
+    LOG_DEBUG("attempt to print utf8 as ascii: %s\n", utf8_const);
 
     return index + length;
 }
@@ -132,7 +132,7 @@ int parse_next_integer(int index, const uint8_t *data) {
     bytes[0] = data[++index];
 
     int result = *(int *)bytes;
-    printf("integer was %d\n", result);
+    LOG_DEBUG("integer was %d\n", result);
 
     return index;
 }
@@ -152,7 +152,7 @@ int parse_next_float(int index, const uint8_t *data) {
     bytes[0] = data[++index];
 
     float result = *(float *)bytes;
-    printf("float was %f\n", result);
+    LOG_DEBUG("float was %f\n", result);
 
     return index;
 }
@@ -177,7 +177,7 @@ int parse_next_long(int index, const uint8_t *data) {
     bytes[0] = data[++index];
 
     long result = *(long *)bytes;
-    printf("long was %ld\n", result);
+    LOG_DEBUG("long was %ld\n", result);
 
     return index;
 }
@@ -202,7 +202,7 @@ int parse_next_double(int index, const uint8_t *data) {
     bytes[0] = data[++index];
 
     double result = *(double *)bytes;
-    printf("double was %f\n", result);
+    LOG_DEBUG("double was %f\n", result);
 
     return index;
 }
@@ -218,7 +218,7 @@ int parse_next_class_ref(int index, const uint8_t *data) {
     uint8_t name_index_msb = data[++index];
     uint8_t name_index_lsb = data[++index];
     int name_index = name_index_msb * 16 + name_index_lsb;
-    printf("name_index was %d\n", name_index);
+    LOG_DEBUG("name_index was %d\n", name_index);
 
     return index;
 }
@@ -233,7 +233,7 @@ int parse_next_string(int index, const uint8_t *data) {
     uint8_t string_index_msb = data[++index];
     uint8_t string_index_lsb = data[++index];
     int string_index = string_index_msb * 16 + string_index_lsb;
-    printf("string_index was %d\n", string_index);
+    LOG_DEBUG("string_index was %d\n", string_index);
 
     return index;
 }
@@ -249,12 +249,12 @@ int parse_next_ref(int index, const uint8_t *data) {
     uint8_t class_index_msb = data[++index];
     uint8_t class_index_lsb = data[++index];
     int class_index = class_index_msb * 16 + class_index_lsb;
-    printf("class_index was %d\n", class_index);
+    LOG_DEBUG("class_index was %d\n", class_index);
 
     uint8_t name_and_type_index_msb = data[++index];
     uint8_t name_and_type_index_lsb = data[++index];
     int name_and_type_index = name_and_type_index_msb * 16 + name_and_type_index_lsb;
-    printf("name and type index was %d\n", name_and_type_index);
+    LOG_DEBUG("name and type index was %d\n", name_and_type_index);
 
     return index;
 }
@@ -304,12 +304,12 @@ int parse_next_name_and_type(int index, const uint8_t *data) {
     uint8_t name_index_msb = data[++index];
     uint8_t name_index_lsb = data[++index];
     int name_index = name_index_msb * 16 + name_index_lsb;
-    printf("name_index was %d\n", name_index);
+    LOG_DEBUG("name_index was %d\n", name_index);
 
     uint8_t desc_index_msb = data[++index];
     uint8_t desc_index_lsb = data[++index];
     int desc_index = desc_index_msb * 16 + desc_index_lsb;
-    printf("desc_index was %d\n", desc_index);
+    LOG_DEBUG("desc_index was %d\n", desc_index);
 
     return index;
 }
@@ -324,12 +324,12 @@ CONSTANT_MethodHandle_info {
 int parse_next_method_handle(int index, const uint8_t *data) {
 
     uint8_t reference_kind = data[++index];
-    printf("reference_kind was %d\n", reference_kind);
+    LOG_DEBUG("reference_kind was %d\n", reference_kind);
 
     uint8_t reference_index_msb = data[++index];
     uint8_t reference_index_lsb = data[++index];
     int reference_index = reference_index_msb * 16 + reference_index_lsb;
-    printf("reference_index was %d\n", reference_index);
+    LOG_DEBUG("reference_index was %d\n", reference_index);
 
     return index;
 }

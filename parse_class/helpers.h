@@ -31,39 +31,39 @@ int parse_integer_u4(int index, const uint8_t data[]) {
  */
 int parse_access_flags(int index, const uint8_t data[]) {
 
-    printf("parsing access flags\n");
+    LOG_DEBUG("parsing access flags\n");
     uint8_t access_flags_msb = data[index++];
     uint8_t access_flags_lsb = data[index++];
 
     if (0x80 & access_flags_msb) {
-        printf("access_flags: ACC_MODULE\n");
+        LOG_DEBUG("access_flags: ACC_MODULE\n");
     }
     if (0x40 & access_flags_msb) {
-        printf("access_flags: ACC_ENUM\n");
+        LOG_DEBUG("access_flags: ACC_ENUM\n");
     }
     if (0x20 & access_flags_msb) {
-        printf("access_flags: ACC_ANNOTATION\n");
+        LOG_DEBUG("access_flags: ACC_ANNOTATION\n");
     }
     if (0x10 & access_flags_msb) {
-        printf("access_flags: ACC_SYNTHETIC\n");
+        LOG_DEBUG("access_flags: ACC_SYNTHETIC\n");
     }
     if (0x04 & access_flags_msb) {
-        printf("access_flags: ACC_ABSTRACT\n");
+        LOG_DEBUG("access_flags: ACC_ABSTRACT\n");
     }
     if (0x02 & access_flags_msb) {
-        printf("access_flags: ACC_INTERFACE\n");
+        LOG_DEBUG("access_flags: ACC_INTERFACE\n");
     }
     if (0x20 & access_flags_lsb) {
-        printf("access_flags: ACC_SUPER\n");
+        LOG_DEBUG("access_flags: ACC_SUPER\n");
     }
     if (0x10 & access_flags_lsb) {
-        printf("access_flags: ACC_FINAL\n");
+        LOG_DEBUG("access_flags: ACC_FINAL\n");
     }
     if (0x01 & access_flags_lsb) {
-        printf("access_flags: ACC_PUBLIC\n");
+        LOG_DEBUG("access_flags: ACC_PUBLIC\n");
     }
 
-    printf("\n");
+    LOG_DEBUG("\n");
     return index;
 }
 
@@ -72,7 +72,7 @@ int parse_access_flags(int index, const uint8_t data[]) {
  */
 int parse_this_class(int index, const uint8_t data[]) {
     int class_index = parse_integer_u2(index, data);
-    printf("this_class index: %d\n", class_index);
+    LOG_DEBUG("this_class index: %d\n", class_index);
 
     return index + 2;
 }
@@ -82,7 +82,7 @@ int parse_this_class(int index, const uint8_t data[]) {
  */
 int parse_super_class(int index, const uint8_t data[]) {
     int class_index = parse_integer_u2(index, data);
-    printf("super_class index: %d\n", class_index);
+    LOG_DEBUG("super_class index: %d\n", class_index);
 
     return index + 2;
 }

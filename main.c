@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "./parse_class/combined.h"
+#include "./parse_class/parse_class.h"
 
 #include "HelloWorld_class.h"
 #include "Greeter_class.h"
