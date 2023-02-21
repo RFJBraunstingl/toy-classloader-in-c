@@ -11,6 +11,21 @@ int parse_integer_u2(int index, const uint8_t data[]) {
     return msb * 16 + lsb;
 }
 
+int parse_integer_u4(int index, const uint8_t data[]) {
+    int result = data[index++];
+    result = result << 8;
+
+    result += data[index++];
+    result = result << 8;
+
+    result += data[index++];
+    result = result << 8;
+
+    result += data[index];
+
+    return result;
+}
+
 /*
  * u2 access_flags
  */

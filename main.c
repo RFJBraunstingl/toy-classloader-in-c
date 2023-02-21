@@ -9,7 +9,7 @@ int main() {
     printf("Hello, World!\n");
 
     parse_class(HelloWorld_class_data);
-    parse_class(Greeter_class_data);
+    // parse_class(Greeter_class_data);
 
     return 0;
 }
