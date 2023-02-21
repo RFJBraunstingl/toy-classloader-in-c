@@ -5,10 +5,13 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(clion_playground main.c)
 
-include(./cmake/FileEmbed.cmake)
-FileEmbedSetup()
-FileEmbedAdd(${CMAKE_SOURCE_DIR}/HelloWorld.class)
-FileEmbedAdd(${CMAKE_SOURCE_DIR}/Greeter.class)
+include(./cmake/EmbedJarContent.cmake)
+SetupClassFileStore()
+file(GLOB_RECURSE files "jar/*.class")
 
-target_link_libraries(clion_playground file_embed)
+foreach(file ${files})
+    EmbedClassFile(${file})
+endforeach()
+
+target_link_libraries(clion_playground classes)
 
