@@ -10,6 +10,9 @@
 
 void parse_class(const uint8_t data[])
 {
+    parse_class_header(data);
+    LOG_DEBUG("\n");
+
     int index = parse_constant_pool(data);
     LOG_DEBUG("\n");
 

@@ -6,8 +6,7 @@
 #include "Greeter_class.h"
 
 int main() {
-    printf("Hello, World!\n");
-
+    printf("parsing class HelloWorld...\n");
     parse_class(HelloWorld_class_data);
     // parse_class(Greeter_class_data);
 

@@ -9,17 +9,17 @@ void guess_java_version(char *major_version, char *target);
  *
  * @param data
  */
-void parse_class_header(uint8_t data[]) {
-    LOG_DEBUG("magic number is '%x%x %x%x'\n",
+void parse_class_header(const uint8_t data[]) {
+    LOG_DEBUG("magic number is '%02x%02x %02x%02x'\n",
            data[0],
            data[1],
            data[2],
            data[3]
     );
 
-    LOG_DEBUG("minor version: %x%x\n", data[4], data[5]);
-    char major_version[4];
-    sprintf(major_version, "%x%x", data[6], data[7]);
+    LOG_DEBUG("minor version: %02x%02x\n", data[4], data[5]);
+    char major_version[5];
+    sprintf(major_version, "%02x%02x", data[6], data[7]);
     LOG_DEBUG("major version: %s\n", major_version);
 
     char java_version_description[10];

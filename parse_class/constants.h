@@ -36,7 +36,7 @@ int parse_next_method_handle(int index, const uint8_t *data);
  */
 int parse_constant_pool(const uint8_t data[]) {
     int const_pool_count = data[8] * 16 + data[9];
-    LOG_DEBUG("dealing with a constant pool of size (%d-1)\n", const_pool_count);
+    LOG_DEBUG("dealing with a constant pool of size %d (-1)\n", const_pool_count);
 
     int index = 9;
     for (int i = 1; i < const_pool_count; i++) {
@@ -50,7 +50,7 @@ int parse_constant_pool(const uint8_t data[]) {
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data) {
     uint8_t tag = data[++index];
-    LOG_DEBUG("constant has tag %d\n", tag);
+    LOG_DEBUG("constant has tag %d ", tag);
 
     switch (tag) {
 
@@ -102,8 +102,8 @@ CONSTANT_Utf8_info {
     u1 bytes[length];
 }
 */
-int parse_next_utf8(int index, const uint8_t *data)
-{
+int parse_next_utf8(int index, const uint8_t *data) {
+    LOG_DEBUG("(UTF-8 constant)\n");
     uint8_t length_msb = data[++index];
     uint8_t length_lsb = data[++index];
     int length = length_msb * 16 + length_lsb;
@@ -125,6 +125,8 @@ CONSTANT_Integer_info {
  */
 int parse_next_integer(int index, const uint8_t *data) {
 
+    LOG_DEBUG("(int)\n");
+
     uint8_t bytes[4];
     bytes[3] = data[++index];
     bytes[2] = data[++index];
@@ -144,6 +146,8 @@ CONSTANT_Float_info {
 }
 */
 int parse_next_float(int index, const uint8_t *data) {
+
+    LOG_DEBUG("(float)\n");
 
     uint8_t bytes[4];
     bytes[3] = data[++index];
@@ -165,6 +169,8 @@ CONSTANT_Long_info {
 }
 */
 int parse_next_long(int index, const uint8_t *data) {
+
+    LOG_DEBUG("(long)\n");
 
     uint8_t bytes[8];
     bytes[7] = data[++index];
@@ -191,6 +197,8 @@ CONSTANT_Double_info {
 */
 int parse_next_double(int index, const uint8_t *data) {
 
+    LOG_DEBUG("(double)\n");
+
     uint8_t bytes[8];
     bytes[7] = data[++index];
     bytes[6] = data[++index];
@@ -215,6 +223,8 @@ CONSTANT_Class_info {
  */
 int parse_next_class_ref(int index, const uint8_t *data) {
 
+    LOG_DEBUG("(class ref)\n");
+
     uint8_t name_index_msb = data[++index];
     uint8_t name_index_lsb = data[++index];
     int name_index = name_index_msb * 16 + name_index_lsb;
@@ -230,6 +240,9 @@ CONSTANT_String_info {
 }
 */
 int parse_next_string(int index, const uint8_t *data) {
+
+    LOG_DEBUG("(string)\n");
+
     uint8_t string_index_msb = data[++index];
     uint8_t string_index_lsb = data[++index];
     int string_index = string_index_msb * 16 + string_index_lsb;
@@ -267,6 +280,7 @@ CONSTANT_Fieldref_info {
 }
 */
 int parse_next_field_ref(int index, const uint8_t *data) {
+    LOG_DEBUG("(field ref)\n");
     return parse_next_ref(index, data);
 }
 
@@ -278,6 +292,7 @@ CONSTANT_Methodref_info {
 }
 */
 int parse_next_method_ref(int index, const uint8_t *data) {
+    LOG_DEBUG("(method ref)\n");
     return parse_next_ref(index, data);
 }
 
@@ -289,6 +304,7 @@ CONSTANT_InterfaceMethodref_info {
 }
 */
 int parse_next_iface_method_ref(int index, const uint8_t *data) {
+    LOG_DEBUG("(interface method ref)\n");
     return parse_next_ref(index, data);
 }
 
@@ -300,6 +316,8 @@ CONSTANT_NameAndType_info {
 }
 */
 int parse_next_name_and_type(int index, const uint8_t *data) {
+
+    LOG_DEBUG("(name and type constant)\n");
 
     uint8_t name_index_msb = data[++index];
     uint8_t name_index_lsb = data[++index];
@@ -322,6 +340,8 @@ CONSTANT_MethodHandle_info {
 }
 */
 int parse_next_method_handle(int index, const uint8_t *data) {
+
+    LOG_DEBUG("(method handle)\n");
 
     uint8_t reference_kind = data[++index];
     LOG_DEBUG("reference_kind was %d\n", reference_kind);
