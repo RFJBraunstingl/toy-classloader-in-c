@@ -79,6 +79,13 @@ int parse_this_class(int index, const uint8_t data[]) {
     return index + 2;
 }
 
+int read_this_class_index(int index, const uint8_t data[]) {
+    int this_class_index = parse_integer_u2(index, data);
+    LOG_DEBUG("this_class_index: %d\n", this_class_index);
+
+    return this_class_index;
+}
+
 /*
  * u2 super_class
  */

@@ -39,13 +39,8 @@ typedef struct {
 
 } constant_pool_entry_t;
 
-/**
- * Parse the constant pool of the given class
- *
- * @param data
- * @return
- */
 constant_pool_entry_t * parse_constant_pool(const uint8_t data[]) {
+
 
     // the constant pool count is a u2 integer at byte index 8 & 9
     int given_const_pool_count = parse_integer_u2(8, data);
@@ -65,7 +60,26 @@ constant_pool_entry_t * parse_constant_pool(const uint8_t data[]) {
         LOG_DEBUG("\n");
     }
 
-    return result;
+}
+
+/**
+ * Parse constant pool of given class file
+ *
+ * @param data an array of bytes which represent the class file
+ * @return the index of the first byte which is not part of the constant pool
+ */
+int parse_constant_pool(const uint8_t data[]) {
+    int const_pool_count = data[8] * 16 + data[9];
+    LOG_DEBUG("dealing with a constant pool of size %d (-1)\n", const_pool_count);
+
+    int index = 9;
+    for (int i = 1; i < const_pool_count; i++) {
+        LOG_DEBUG("reading constant pool entry %d\n", i);
+        index = parse_next_constant_pool_entry(index, data);
+        LOG_DEBUG("\n");
+    }
+
+    return index + 1;
 }
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data) {
