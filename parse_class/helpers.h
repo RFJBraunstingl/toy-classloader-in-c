@@ -55,7 +55,7 @@ int parse_access_flags(int index, const uint8_t data[]) {
 /*
  * u2 this_class
  */
-int parse_this_class(int index, uint8_t data[]) {
+int parse_this_class(int index, const uint8_t data[]) {
     int class_index = parse_integer_u2(index, data);
     printf("this_class index: %d\n", class_index);
 
@@ -65,7 +65,7 @@ int parse_this_class(int index, uint8_t data[]) {
 /*
  * u2 super_class
  */
-int parse_super_class(int index, uint8_t data[]) {
+int parse_super_class(int index, const uint8_t data[]) {
     int class_index = parse_integer_u2(index, data);
     printf("super_class index: %d\n", class_index);
 

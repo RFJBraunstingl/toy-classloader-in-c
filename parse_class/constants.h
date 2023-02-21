@@ -34,7 +34,7 @@ int parse_next_method_handle(int index, const uint8_t *data);
  * @param data an array of bytes which represent the class file
  * @return the index of the first byte which is not part of the constant pool
  */
-int parse_constant_pool(uint8_t data[]) {
+int parse_constant_pool(const uint8_t data[]) {
     int const_pool_count = data[8] * 16 + data[9];
     printf("dealing with a constant pool of size (%d-1)\n", const_pool_count);
 
