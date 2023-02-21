@@ -5,10 +5,12 @@
 #include <stdio.h>
 
 int parse_integer_u2(int index, const uint8_t data[]) {
-    uint8_t msb = data[index];
-    uint8_t lsb = data[index + 1];
+    int result = data[index];
+    result  = result << 8;
 
-    return msb * 16 + lsb;
+    result += data[index + 1];
+
+    return result;
 }
 
 int parse_integer_u4(int index, const uint8_t data[]) {
