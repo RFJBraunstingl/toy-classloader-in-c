@@ -3,12 +3,6 @@
 #include <string.h>
 #include "helpers.h"
 
-typedef struct class_identifier {
-
-
-
-} class_identifier_t;
-
 typedef struct {
 
     // every constant has a type (/tag)
@@ -83,18 +77,6 @@ int parse_constant_pool(const uint8_t data[]) {
     }
 
     return index;
-}
-
-int scan_class_identifier(const uint8_t data[], class_identifier_t *out) {
-    int given_const_pool_count = parse_integer_u2(8, data);
-
-    int byte_index = 9;
-    for (int i = 1; i < given_const_pool_count; i++) {
-        uint8_t tag = data[++byte_index];
-
-    }
-
-    return 0;
 }
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data, const_pool_entry_t *out) {
