@@ -13,4 +13,10 @@ SetupEmbed()
 EmbedManifestFile("jar/META-INF/MANIFEST.MF")
 EmbedClassFiles("jar/*.class")
 
-target_link_libraries(toy_classloader_in_c class_files)
+add_library(bifit
+        bifit/bifit.h
+        bifit/bifit.c)
+target_include_directories(bifit PUBLIC bifit)
+
+target_link_libraries(bifit class_files)
+target_link_libraries(toy_classloader_in_c bifit)
