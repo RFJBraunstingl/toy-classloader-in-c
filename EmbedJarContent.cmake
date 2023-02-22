@@ -1,3 +1,35 @@
+function(EmbedClassFiles path)
+    SetupClassFileStore()
+    file(GLOB_RECURSE files ${path})
+
+    set(output_h "
+#ifndef CLASSES_COMBINED_H
+#define CLASSES_COMBINED_H
+#include \"stdint.h\"
+typedef uint8_t * classfile_pointer\;
+extern classfile_pointer all_class_files[]\;
+// extern unsigned ${c_name}_size\;
+#endif // CLASSES_COMBINED_H
+")
+
+    file(WRITE ${CMAKE_BINARY_DIR}/classes/classes_combined.h
+            ${output_h})
+
+    set(output_c "
+#include \"classes_combined.h\"
+classfile_pointer all_class_files[] = {")
+
+    file(WRITE ${CMAKE_BINARY_DIR}/classes/classes_combined.c
+            ${output_c})
+
+    foreach(file ${files})
+        EmbedClassFile(${file})
+    endforeach()
+
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
+            "\n};")
+endfunction()
+
 function(SetupClassFileStore)
 
     message("setting up class file store")
@@ -5,11 +37,7 @@ function(SetupClassFileStore)
         file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/classes)
     endif ()
 
-    if (NOT EXISTS ${CMAKE_BINARY_DIR}/classes/dummy.c)
-        file(WRITE ${CMAKE_BINARY_DIR}/classes/dummy.c "")
-    endif ()
-
-    add_library(classes ${CMAKE_BINARY_DIR}/classes/dummy.c)
+    add_library(classes ${CMAKE_BINARY_DIR}/classes/classes_combined.h)
     target_include_directories(classes PUBLIC ${CMAKE_BINARY_DIR}/classes)
 
 endfunction()
@@ -73,10 +101,12 @@ extern unsigned ${c_name}_size\;
     file(WRITE ${CMAKE_BINARY_DIR}/classes/${c_name}.h
             ${output_h})
 
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.h
+            "\n#include \"${c_name}.h\"")
+
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
+            "\n${c_name}_data,")
+
     set(${generated_c} ${CMAKE_BINARY_DIR}/classes/${c_name}.c PARENT_SCOPE)
 
 endfunction()
-
-if (RUN_CLASS_FILE_GENERATE)
-    ClassFileGenerate(${CLASS_FILE_GENERATE_PATH} var)
-endif ()
