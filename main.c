@@ -7,7 +7,7 @@
 int main() {
     printf("parsing class HelloWorld...\n");
 
-    parse_class(all_class_files[0]);
+    parse_class(bifit_embedded_class_files[0]);
 
     return 0;
 }

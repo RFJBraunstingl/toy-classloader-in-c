@@ -1,5 +1,14 @@
 function(EmbedClassFiles path)
-    SetupClassFileStore()
+
+    if (NOT EXISTS ${CMAKE_BINARY_DIR}/classes)
+        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/classes)
+    endif ()
+
+    add_library(class_files
+            ${CMAKE_BINARY_DIR}/classes/classes_combined.h
+            ${CMAKE_BINARY_DIR}/classes/classes_combined.c)
+    target_include_directories(class_files PUBLIC ${CMAKE_BINARY_DIR}/classes)
+
     file(GLOB_RECURSE files ${path})
 
     set(output_h "
@@ -7,7 +16,7 @@ function(EmbedClassFiles path)
 #define CLASSES_COMBINED_H
 #include \"stdint.h\"
 typedef uint8_t * classfile_pointer\;
-extern classfile_pointer all_class_files[]\;
+extern classfile_pointer bifit_embedded_class_files[]\;
 // extern unsigned ${c_name}_size\;
 #endif // CLASSES_COMBINED_H
 ")
@@ -17,7 +26,7 @@ extern classfile_pointer all_class_files[]\;
 
     set(output_c "
 #include \"classes_combined.h\"
-classfile_pointer all_class_files[] = {")
+classfile_pointer bifit_embedded_class_files[] = {")
 
     file(WRITE ${CMAKE_BINARY_DIR}/classes/classes_combined.c
             ${output_c})
@@ -30,24 +39,10 @@ classfile_pointer all_class_files[] = {")
             "\n};")
 endfunction()
 
-function(SetupClassFileStore)
-
-    message("setting up class file store")
-    if (NOT EXISTS ${CMAKE_BINARY_DIR}/classes)
-        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/classes)
-    endif ()
-
-    add_library(classes
-            ${CMAKE_BINARY_DIR}/classes/classes_combined.h
-            ${CMAKE_BINARY_DIR}/classes/classes_combined.c)
-    target_include_directories(classes PUBLIC ${CMAKE_BINARY_DIR}/classes)
-
-endfunction()
-
 function(EmbedClassFile file)
     message("embed class file ${file}")
     ClassFileGenerate(${file} var)
-    target_sources(classes PUBLIC ${var})
+    target_sources(class_files PUBLIC ${var})
 endfunction()
 
 function(ClassFileGenerate file generated_c)

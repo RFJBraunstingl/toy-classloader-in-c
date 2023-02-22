@@ -11,4 +11,4 @@ add_executable(toy_classloader_in_c main.c)
 include(EmbedJarContent.cmake)
 EmbedClassFiles("jar/*.class")
 
-target_link_libraries(toy_classloader_in_c classes)
+target_link_libraries(toy_classloader_in_c class_files)
