@@ -20,6 +20,6 @@ void bifit_class_index_build() {
 
 void bifit_run() {
     bifit_class_index_build();
-    bifit_class_index_find_identifier(bifit_main_class_identifier);
-    bifit_execute_main_method();
+    // bifit_class_index_find_identifier(bifit_main_class_identifier);
+    // bifit_execute_main_method();
 }

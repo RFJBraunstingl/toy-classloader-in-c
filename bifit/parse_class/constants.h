@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "helpers.h"
-
 int parse_next_constant_pool_entry(int index, const uint8_t *data);
 
 int parse_next_method_ref(int index, const uint8_t *data);
@@ -30,42 +28,24 @@ int parse_next_name_and_type(int index, const uint8_t *data);
 
 int parse_next_method_handle(int index, const uint8_t *data);
 
-typedef struct {
-
-    int byte_offset;    // the index of uint8_t[] holding the bytes of the class file
-    int len_in_bytes;   // the number of bytes reserved for this entry
-    uint8_t tag;        // the tag (type) of this constant pool entry
-    char *utf8;         // if the entry is a UTF-8 string (tag == 1), this is a pointer to it
-
-} constant_pool_entry_t;
-
 /**
- * Parse the constant pool of the given class
+ * Parse constant pool of given class file
  *
- * @param data
- * @return
+ * @param data an array of bytes which represent the class file
+ * @return the index of the first byte which is not part of the constant pool
  */
-constant_pool_entry_t * parse_constant_pool(const uint8_t data[]) {
-
-    // the constant pool count is a u2 integer at byte index 8 & 9
-    int given_const_pool_count = parse_integer_u2(8, data);
-    // due to class file specification, the u2 integer specifies the count + 1
-    int const_pool_count = given_const_pool_count - 1;
+int parse_constant_pool(const uint8_t data[]) {
+    int const_pool_count = data[8] * 16 + data[9];
     LOG_DEBUG("dealing with a constant pool of size %d (-1)\n", const_pool_count);
 
-    // allocate the representation for the constant pool
-    constant_pool_entry_t result[const_pool_count];
-
-    // thus the actual content of the constant pool always starts at byte index 10
-    int byte_index = 9;
-
-    for (int i = 1; i < given_const_pool_count; i++) {
+    int index = 9;
+    for (int i = 1; i < const_pool_count; i++) {
         LOG_DEBUG("reading constant pool entry %d\n", i);
-        byte_index = parse_next_constant_pool_entry(byte_index, data);
+        index = parse_next_constant_pool_entry(index, data);
         LOG_DEBUG("\n");
     }
 
-    return result;
+    return index + 1;
 }
 
 int parse_next_constant_pool_entry(int index, const uint8_t *data) {
