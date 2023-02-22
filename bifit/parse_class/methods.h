@@ -21,8 +21,8 @@ int parse_methods(int index, const uint8_t data[]) {
     index += 2;
     LOG_DEBUG("method_count: %d\n", method_count);
 
-    for (int i = 1; i < method_count; i++) {
-        LOG_DEBUG("reading method entry %d\n", i);
+    for (int i = 1; i <= method_count; i++) {
+        LOG_DEBUG("\nreading method entry %d\n", i);
         index = parse_next_method_entry(index, data);
     }
 
@@ -110,9 +110,10 @@ int parse_method_desc_index(int index, const uint8_t *data) {
 int parse_method_attributes(int index, const uint8_t *data) {
     LOG_DEBUG("parse_method_attributes\n");
     int attr_count = parse_integer_u2(index, data);
+    LOG_DEBUG("attribute count is %d\n", attr_count);
     index += 2;
 
-    for (int i = 0; i < attr_count; i++) {
+    for (int i = 1; i <= attr_count; i++) {
         LOG_DEBUG("reading attribute %d\n", i);
         index = parse_next_method_attribute(index, data);
     }
