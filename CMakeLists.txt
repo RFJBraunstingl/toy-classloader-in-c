@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.24)
-project(clion_playground C)
+project(toy_classloader_in_c
+        VERSION 1.0
+        DESCRIPTION "Playing around with loading bytecode classes"
+        LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(clion_playground main.c)
+add_executable(toy_classloader_in_c main.c)
 
 include(EmbedJarContent.cmake)
 EmbedClassFiles("jar/*.class")
 
-target_link_libraries(clion_playground classes)
+target_link_libraries(toy_classloader_in_c classes)

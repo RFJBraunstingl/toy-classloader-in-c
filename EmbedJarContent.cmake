@@ -46,15 +46,6 @@ function(EmbedClassFile file)
     message("embed class file ${file}")
     ClassFileGenerate(${file} var)
     target_sources(classes PUBLIC ${var})
-
-    add_custom_command(
-            OUTPUT ${var}
-            COMMAND ${CMAKE_COMMAND}
-            -DRUN_CLASS_FILE_GENERATE=1
-            -DCLASS_FILE_GENERATE_PATH=${file}
-            -P ${CMAKE_SOURCE_DIR}/cmake/EmbedJarContent.cmake
-            MAIN_DEPENDENCY ${file}
-    )
 endfunction()
 
 function(ClassFileGenerate file generated_c)
@@ -110,3 +101,7 @@ extern unsigned ${c_name}_size\;
     set(${generated_c} ${CMAKE_BINARY_DIR}/classes/${c_name}.c PARENT_SCOPE)
 
 endfunction()
+
+if (RUN_CLASS_FILE_GENERATE)
+    ClassFileGenerate(${CLASS_FILE_GENERATE_PATH} var)
+endif ()
