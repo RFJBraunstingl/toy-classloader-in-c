@@ -1,7 +1,6 @@
 
 #include "classes_combined.h"
-
-typedef uint8_t * identifier_p;
+#include "parse_class/parse_class.h"
 
 /**
  * Loop through the embedded class files
@@ -10,11 +9,10 @@ typedef uint8_t * identifier_p;
  */
 void bifit_class_index_build() {
 
-    identifier_p identifier_pointer_array[bifit_embedded_class_files_size];
-
     for (int i = 0; i < bifit_embedded_class_files_size; i++) {
         uint8_t *class_file = bifit_embedded_class_files[i];
-
+        class_identifier_t *identifier = malloc(sizeof(class_identifier_t));
+        scan_class_identifier(class_file, identifier);
     }
 }
 
