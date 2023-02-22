@@ -6,8 +6,8 @@
 
 int main() {
     printf("parsing class HelloWorld...\n");
-    //parse_class(HelloWorld_class_data);
-    // parse_class(Greeter_class_data);
+
+    parse_class(all_class_files[0]);
 
     return 0;
 }

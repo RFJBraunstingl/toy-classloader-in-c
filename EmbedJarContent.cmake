@@ -22,9 +22,9 @@ classfile_pointer all_class_files[] = {")
     file(WRITE ${CMAKE_BINARY_DIR}/classes/classes_combined.c
             ${output_c})
 
-    foreach(file ${files})
+    foreach (file ${files})
         EmbedClassFile(${file})
-    endforeach()
+    endforeach ()
 
     file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
             "\n};")
@@ -37,7 +37,9 @@ function(SetupClassFileStore)
         file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/classes)
     endif ()
 
-    add_library(classes ${CMAKE_BINARY_DIR}/classes/classes_combined.h)
+    add_library(classes
+            ${CMAKE_BINARY_DIR}/classes/classes_combined.h
+            ${CMAKE_BINARY_DIR}/classes/classes_combined.c)
     target_include_directories(classes PUBLIC ${CMAKE_BINARY_DIR}/classes)
 
 endfunction()
