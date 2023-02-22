@@ -1,5 +1,4 @@
-function(EmbedClassFiles path)
-
+function(SetupEmbed)
     if (NOT EXISTS ${CMAKE_BINARY_DIR}/classes)
         file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/classes)
     endif ()
@@ -9,34 +8,83 @@ function(EmbedClassFiles path)
             ${CMAKE_BINARY_DIR}/classes/classes_combined.c)
     target_include_directories(class_files PUBLIC ${CMAKE_BINARY_DIR}/classes)
 
-    file(GLOB_RECURSE files ${path})
-
     set(output_h "
 #ifndef CLASSES_COMBINED_H
 #define CLASSES_COMBINED_H
 #include \"stdint.h\"
-typedef uint8_t * classfile_pointer\;
-extern classfile_pointer bifit_embedded_class_files[]\;
-// extern unsigned ${c_name}_size\;
-#endif // CLASSES_COMBINED_H
 ")
-
     file(WRITE ${CMAKE_BINARY_DIR}/classes/classes_combined.h
             ${output_h})
 
     set(output_c "
 #include \"classes_combined.h\"
-classfile_pointer bifit_embedded_class_files[] = {")
-
+")
     file(WRITE ${CMAKE_BINARY_DIR}/classes/classes_combined.c
             ${output_c})
+endfunction()
 
+function(EmbedManifestFile path)
+
+    message("load manifest file ${path}")
+
+    # load manifest file into ${manifest_content}
+    file(READ ${path} manifest_content)
+
+    # find the main class entry
+    string(REGEX MATCH "Main-Class: .*" main_class_line ${manifest_content})
+
+    # get the identifier
+    string(REPLACE "Main-Class: " "" main_class_identifier ${main_class_line})
+    string(REGEX REPLACE "\n" "" main_class_identifier "${main_class_identifier}")
+    message("found main class identifier: ${main_class_identifier}")
+
+    # make the identifier accessible in C
+    set(output_h "
+extern char * bifit_main_class_identifier\;
+")
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.h
+            ${output_h})
+
+    set(output_c "
+char * bifit_main_class_identifier = \"${main_class_identifier}\"\;
+")
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
+            ${output_c})
+
+endfunction()
+
+function(EmbedClassFiles path)
+
+
+    file(GLOB_RECURSE files ${path})
+
+    set(output_h "
+typedef uint8_t * classfile_pointer\;
+extern classfile_pointer bifit_embedded_class_files[]\;
+unsigned int bifit_embedded_class_files_size\;
+#endif // CLASSES_COMBINED_H
+")
+
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.h
+            ${output_h})
+
+    set(output_c "
+classfile_pointer bifit_embedded_class_files[] = {")
+
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
+            ${output_c})
+
+    set(counter 0)
     foreach (file ${files})
         EmbedClassFile(${file})
+        MATH(EXPR counter "${counter}+1")
     endforeach ()
 
     file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
-            "\n};")
+            "\n};\n")
+    file(APPEND ${CMAKE_BINARY_DIR}/classes/classes_combined.c
+            "unsigned int bifit_embedded_class_files_size = ${counter};")
+
 endfunction()
 
 function(EmbedClassFile file)
