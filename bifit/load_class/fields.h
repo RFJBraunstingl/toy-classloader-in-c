@@ -3,7 +3,7 @@
 
 unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_field_t *out);
 
-unsigned int load_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out);
+unsigned int load_field_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out);
 
 void load_fields(unsigned int start_index, const uint8_t *data, bifit_class_t *out) {
 
@@ -33,7 +33,7 @@ field_info {
 */
 unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_field_t *out) {
 
-    index = load_access_flags(index, data, &out->access_flags);
+    index = load_field_access_flags(index, data, &out->access_flags);
 
     int identifier_name_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(identifier_name_index, entries, &out->name_identifier);
@@ -52,7 +52,7 @@ unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_cons
     return index;
 }
 
-unsigned int load_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out) {
+unsigned int load_field_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out) {
     uint8_t msb = data[index];
     uint8_t lsb = data[index + 1];
 

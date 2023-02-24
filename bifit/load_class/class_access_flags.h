@@ -2,7 +2,7 @@
 
 #define BIFIT_CLASS_ACCESS_FLAGS_SIZE_IN_BYTES 2
 
-void load_access_flags(unsigned int index, const uint8_t data[], bifit_class_access_flags_t *out) {
+void load_class_access_flags(unsigned int index, const uint8_t data[], bifit_class_access_flags_t *out) {
     uint8_t msb = data[index];
     uint8_t lsb = data[index + 1];
 
