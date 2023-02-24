@@ -1,4 +1,4 @@
-#include "./bifit/bifit.h"
+#include "bifit.h"
 
 int main() {
 

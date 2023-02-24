@@ -27,9 +27,9 @@ bifit_class_t *bifit_load_embedded_classes() {
 void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
 
     load_class_header(data, &out->class_header);
-    load_constant_pool(data, );
+    load_constant_pool(data, &out->constant_pool);
 
-    int byte_index = BIFIT_CLASS_HEADER_SIZE_IN_BYTES + out->constant_pool.size_in_bytes;
+    unsigned int byte_index = BIFIT_CLASS_HEADER_SIZE_IN_BYTES + out->constant_pool.size_in_bytes;
 
     // byte_index = parse_access_flags(byte_index, data);
     byte_index += 2;
@@ -39,7 +39,8 @@ void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
     load_class_identifier(byte_index, data, out->constant_pool.entries, &(out->super_class));
     byte_index += 2;
 
-    byte_index = load_interfaces(byte_index, data);
+    load_interfaces(byte_index, data, out);
+    byte_index += out->interfaces.size_in_bytes;
 
 }
 
