@@ -30,18 +30,16 @@ int load_next_method_handle(int index, const uint8_t *data, bifit_constant_pool_
 
 
 #define BIFIT_CONSTANT_POOL_START_INDEX 8
-bifit_constant_pool_t *load_constant_pool(const uint8_t data[]) {
-
-    bifit_constant_pool_t *result = malloc(sizeof(bifit_constant_pool_t));
+void load_constant_pool(const uint8_t data[], bifit_constant_pool_t *out) {
 
     int const_pool_size = parse_integer_u2(BIFIT_CONSTANT_POOL_START_INDEX, data);
     unsigned int number_of_entries = const_pool_size - 1;
     LOG_DEBUG("dealing with a constant pool of size %d\n", number_of_entries);
 
-    result->entries = malloc(
+    out->entries = malloc(
             sizeof(bifit_constant_pool_entry_t) * number_of_entries
     );
-    result->entry_count = number_of_entries;
+    out->entry_count = number_of_entries;
 
     int byte_index = 10;
     for (int i = 1; i < const_pool_size; i++) {
@@ -49,13 +47,12 @@ bifit_constant_pool_t *load_constant_pool(const uint8_t data[]) {
         byte_index = load_next_constant_pool_entry(
                 byte_index,
                 data,
-                &result->entries[i - 1]
+                &out->entries[i - 1]
         );
         LOG_DEBUG("\n");
     }
-    
-    result->size_in_bytes = byte_index - BIFIT_CONSTANT_POOL_START_INDEX;
-    return result;
+
+    out->size_in_bytes = byte_index - BIFIT_CONSTANT_POOL_START_INDEX;
 }
 
 int load_next_constant_pool_entry(int index, const uint8_t *data, bifit_constant_pool_entry_t *out) {

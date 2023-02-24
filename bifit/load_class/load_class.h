@@ -3,6 +3,7 @@
 #include "class_header.h"
 #include "constant_pool.h"
 #include "class_identifier.h"
+#include "interfaces.h"
 
 /* prototypes */
 bifit_class_t *bifit_load_embedded_classes();
@@ -25,8 +26,8 @@ bifit_class_t *bifit_load_embedded_classes() {
 
 void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
 
-    out->class_header = *load_class_header(data);
-    out->constant_pool = *load_constant_pool(data);
+    load_class_header(data, &out->class_header);
+    load_constant_pool(data, );
 
     int byte_index = BIFIT_CLASS_HEADER_SIZE_IN_BYTES + out->constant_pool.size_in_bytes;
 
@@ -38,7 +39,7 @@ void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
     load_class_identifier(byte_index, data, out->constant_pool.entries, &(out->super_class));
     byte_index += 2;
 
-    //byte_index = parse_interfaces(byte_index, data);
+    byte_index = load_interfaces(byte_index, data);
 
 }
 

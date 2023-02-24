@@ -65,10 +65,19 @@ typedef struct {
 
 typedef struct {
 
+    unsigned int interface_count;
+    unsigned int size_in_bytes;
+    bifit_class_identifier_t *interface_identifiers;
+
+} bifit_class_interfaces_t;
+
+typedef struct {
+
     bifit_class_header_t class_header;
     bifit_constant_pool_t constant_pool;
     bifit_class_identifier_t this_class;
     bifit_class_identifier_t super_class;
+    bifit_class_interfaces_t interfaces;
 
 } bifit_class_t;
 
