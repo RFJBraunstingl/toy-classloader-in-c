@@ -8,7 +8,7 @@ void load_interfaces(unsigned int start_index, const uint8_t data[], bifit_class
     LOG_DEBUG("interface_count: %d\n", out->interfaces.interface_count);
     byte_index += 2;
 
-    out->interfaces.interface_identifiers = malloc(
+    out->interfaces.identifiers = malloc(
             sizeof(bifit_identifier_t) * out->interfaces.interface_count
     );
 
@@ -17,7 +17,7 @@ void load_interfaces(unsigned int start_index, const uint8_t data[], bifit_class
                 byte_index,
                 data,
                 out->constant_pool.entries,
-                &out->interfaces.interface_identifiers[i]
+                &out->interfaces.identifiers[i]
         );
     }
 

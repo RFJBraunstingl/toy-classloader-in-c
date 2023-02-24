@@ -21,7 +21,7 @@ typedef struct {
 
 typedef struct {
 
-    bifit_identifier_t identifier;
+    bifit_identifier_t name;
     int length_in_bytes;
     const uint8_t *data;
 
@@ -69,7 +69,7 @@ typedef struct {
 
 typedef struct {
 
-    unsigned int entry_count;
+    int entry_count;
     unsigned int size_in_bytes;
     bifit_constant_pool_entry_t *entries;
 
@@ -91,9 +91,9 @@ typedef struct {
 
 typedef struct {
 
-    unsigned int interface_count;
+    int interface_count;
     unsigned int size_in_bytes;
-    bifit_identifier_t *interface_identifiers;
+    bifit_identifier_t *identifiers;
 
 } bifit_class_interfaces_t;
 
@@ -114,8 +114,8 @@ typedef struct {
 typedef struct {
 
     bifit_field_access_flags_t access_flags;
-    bifit_identifier_t name_identifier;
-    bifit_identifier_t descriptor_identifier;
+    bifit_identifier_t name;
+    bifit_identifier_t descriptor;
     int attributes_count;
     bifit_attribute_t *attributes;
 
@@ -123,11 +123,43 @@ typedef struct {
 
 typedef struct {
 
-    unsigned int field_count;
+    int field_count;
     unsigned int size_in_bytes;
     bifit_field_t *field_array;
 
 } bifit_fields_t;
+
+typedef struct {
+
+    bool is_public;
+    bool is_private;
+    bool is_protected;
+    bool is_static;
+    bool is_final;
+    bool is_synchronized;
+    bool is_bridge;
+    bool is_varargs;
+    bool is_native;
+    bool is_abstract;
+    bool is_strict;
+    bool is_synthetic;
+
+} bifit_method_access_flags_t;
+
+typedef struct {
+
+    bifit_method_access_flags_t access_flags;
+    bifit_identifier_t identifier;
+
+} bifit_method_t;
+
+typedef struct {
+
+    int method_count;
+    unsigned int size_in_bytes;
+    bifit_method_t *method_array;
+
+} bifit_methods_t;
 
 /**
  * putting it all together
@@ -141,6 +173,7 @@ typedef struct {
     bifit_class_interfaces_t interfaces;
     bifit_class_access_flags_t access_flags;
     bifit_fields_t fields;
+    bifit_methods_t methods;
 
 } bifit_class_t;
 

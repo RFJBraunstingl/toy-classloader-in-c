@@ -43,7 +43,7 @@ attribute_info {
 */
 unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_attribute_t *out) {
     int name_index = parse_integer_u2(index, data);
-    load_identifier_by_name_index(name_index, entries, &out->identifier);
+    load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
 
     out->length_in_bytes = parse_integer_u4(index, data);

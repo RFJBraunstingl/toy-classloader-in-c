@@ -46,5 +46,7 @@ void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
 
     load_fields(byte_index, data, out);
     byte_index += out->fields.size_in_bytes;
+
+
 }
 

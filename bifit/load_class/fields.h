@@ -36,11 +36,11 @@ unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_cons
     index = load_field_access_flags(index, data, &out->access_flags);
 
     int identifier_name_index = parse_integer_u2(index, data);
-    load_identifier_by_name_index(identifier_name_index, entries, &out->name_identifier);
+    load_identifier_by_name_index(identifier_name_index, entries, &out->name);
     index += 2;
 
     int descriptor_name_index = parse_integer_u2(index, data);
-    load_identifier_by_name_index(descriptor_name_index, entries, &out->descriptor_identifier);
+    load_identifier_by_name_index(descriptor_name_index, entries, &out->descriptor);
     index += 2;
 
     out->attributes_count = parse_integer_u2(index, data);
