@@ -85,6 +85,34 @@ typedef struct {
 
 typedef struct {
 
+    bool is_public;
+    bool is_private;
+    bool is_protected;
+    bool is_static;
+    bool is_final;
+    bool is_volatile;
+    bool is_transient;
+    bool is_synthetic;
+    bool is_enum;
+
+} bifit_field_access_flags_t;
+
+typedef struct {
+
+    bifit_field_access_flags_t access_flags;
+
+} bifit_field_t;
+
+typedef struct {
+
+    unsigned int field_count;
+    unsigned int size_in_bytes;
+    bifit_field_t *fields;
+
+} bifit_fields_t;
+
+typedef struct {
+
     bifit_class_header_t class_header;
     bifit_constant_pool_t constant_pool;
     bifit_class_identifier_t this_class;
