@@ -1,7 +1,7 @@
 #include "bifit.h"
 #include "load_class_utils.h"
 
-unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_t constant_pool, bifit_field_t *out);
+unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_field_t *out);
 
 unsigned int load_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out);
 
@@ -16,7 +16,7 @@ void load_fields(unsigned int start_index, const uint8_t *data, bifit_class_t *o
     out->fields.field_array = malloc(sizeof(bifit_field_t) * out->fields.field_count);
 
     for (int i = 0; i < out->fields.field_count; ++i) {
-        index = load_next_field(index, data, out->constant_pool, &out->fields.field_array[i]);
+        index = load_next_field(index, data, out->constant_pool.entries, &out->fields.field_array[i]);
     }
 
     out->fields.size_in_bytes = index - start_index;
@@ -31,10 +31,25 @@ field_info {
     attribute_info attributes[attributes_count];
 }
 */
-unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_t constant_pool, bifit_field_t *out) {
+unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_field_t *out) {
 
     index = load_access_flags(index, data, &out->access_flags);
 
+    int identifier_name_index = parse_integer_u2(index, data);
+    load_identifier_by_name_index(identifier_name_index, entries, &out->name_identifier);
+    index += 2;
+
+    int descriptor_name_index = parse_integer_u2(index, data);
+    load_identifier_by_name_index(descriptor_name_index, entries, &out->descriptor_identifier);
+    index += 2;
+
+    out->attributes_count = parse_integer_u2(index, data);
+    out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
+    for (int i = 0; i < out->attributes_count; ++i) {
+        index = load_attribute(index, data, entries, &out->attributes[i]);
+    }
+
+    return index;
 }
 
 unsigned int load_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out) {

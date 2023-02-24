@@ -9,6 +9,9 @@
 
 #include "classes_combined.h"
 
+/**
+ * generic types
+ */
 typedef struct {
 
     const uint8_t *class_identifier;
@@ -16,6 +19,17 @@ typedef struct {
 
 } bifit_identifier_t;
 
+typedef struct {
+
+    bifit_identifier_t identifier;
+    int length_in_bytes;
+    const uint8_t *data;
+
+} bifit_attribute_t;
+
+/**
+ * actual class types
+ */
 typedef struct {
 
     int major_version;
@@ -100,7 +114,10 @@ typedef struct {
 typedef struct {
 
     bifit_field_access_flags_t access_flags;
-    bifit_identifier_t identifier;
+    bifit_identifier_t name_identifier;
+    bifit_identifier_t descriptor_identifier;
+    int attributes_count;
+    bifit_attribute_t *attributes;
 
 } bifit_field_t;
 
@@ -112,6 +129,9 @@ typedef struct {
 
 } bifit_fields_t;
 
+/**
+ * putting it all together
+ */
 typedef struct {
 
     bifit_class_header_t class_header;
@@ -124,6 +144,9 @@ typedef struct {
 
 } bifit_class_t;
 
+/**
+ * define interface methods
+ */
 void bifit_run();
 
 #endif
