@@ -1,25 +1,25 @@
 #include "bifit.h"
 #include "load_class_utils.h"
 
-unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_field_t *out);
+unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_t constant_pool, bifit_field_t *out);
 
 unsigned int load_access_flags(unsigned int index, const uint8_t *data, bifit_field_access_flags_t *out);
 
-void load_fields(unsigned int start_index, const uint8_t *data, bifit_fields_t *out) {
+void load_fields(unsigned int start_index, const uint8_t *data, bifit_class_t *out) {
 
     unsigned int index = start_index;
 
-    out->field_count = parse_integer_u2(index, data);
-    LOG_DEBUG("load_fields num of fields: %d\n", out->field_count);
+    out->fields.field_count = parse_integer_u2(index, data);
+    LOG_DEBUG("load_fields num of fields: %d\n", out->fields.field_count);
     index += 2;
 
-    out->fields = malloc(sizeof(bifit_field_t) * out->field_count);
+    out->fields.field_array = malloc(sizeof(bifit_field_t) * out->fields.field_count);
 
-    for (int i = 0; i < out->field_count; ++i) {
-        index = load_next_field(index, data, &out->fields[i]);
+    for (int i = 0; i < out->fields.field_count; ++i) {
+        index = load_next_field(index, data, out->constant_pool, &out->fields.field_array[i]);
     }
 
-    out->size_in_bytes = index - start_index;
+    out->fields.size_in_bytes = index - start_index;
 }
 
 /*
@@ -31,10 +31,9 @@ field_info {
     attribute_info attributes[attributes_count];
 }
 */
-unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_field_t *out) {
+unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_constant_pool_t constant_pool, bifit_field_t *out) {
 
     index = load_access_flags(index, data, &out->access_flags);
-
 
 }
 

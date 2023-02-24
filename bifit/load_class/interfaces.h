@@ -9,7 +9,7 @@ void load_interfaces(unsigned int start_index, const uint8_t data[], bifit_class
     byte_index += 2;
 
     out->interfaces.interface_identifiers = malloc(
-            sizeof(bifit_class_identifier_t) * out->interfaces.interface_count
+            sizeof(bifit_identifier_t) * out->interfaces.interface_count
     );
 
     for (int i = 0; i < out->interfaces.interface_count; ++i) {
