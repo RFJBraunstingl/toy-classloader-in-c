@@ -1,5 +1,7 @@
-#ifndef BIFIT_NUMBER_UTIL_H_
-#define BIFIT_NUMBER_UTIL_H_
+#ifndef LOAD_CLASS_UTILS_H_
+#define LOAD_CLASS_UTILS_H_
+
+#include <stdlib.h>
 
 int parse_integer_u2(unsigned int index, const uint8_t data[]) {
     int result = data[index];

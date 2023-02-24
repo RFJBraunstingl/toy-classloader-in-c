@@ -2,6 +2,7 @@
 #define BIFIT_LOAD_CLASS_HEADER_H_
 
 #include "bifit.h"
+#include "load_class_utils.h"
 
 #define BIFIT_CLASS_HEADER_SIZE_IN_BYTES 8
 

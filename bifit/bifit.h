@@ -8,9 +8,6 @@
 
 #include "classes_combined.h"
 
-#include "./util/bifit_string_util.h"
-#include "./util/bifit_number_util.h"
-
 typedef struct {
 
     int major_version;
