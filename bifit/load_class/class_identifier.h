@@ -1,5 +1,7 @@
 #include "bifit.h"
 
+#define BIFIT_CLASS_IDENTIFIER_SIZE_IN_BYTES 2
+
 void load_class_identifier(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_class_identifier_t *out) {
     LOG_DEBUG("\nload_class_identifier\n");
     int class_index = parse_integer_u2(index, data);

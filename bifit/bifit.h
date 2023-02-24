@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "classes_combined.h"
 
@@ -55,6 +56,20 @@ typedef struct {
 
 typedef struct {
 
+    bool is_public;
+    bool is_final;
+    bool is_super;
+    bool is_interface;
+    bool is_abstract;
+    bool is_synthetic;
+    bool is_annotation;
+    bool is_enum;
+    bool is_module;
+
+} bifit_class_access_flags_t;
+
+typedef struct {
+
     const uint8_t *class_identifier;
     int class_identifier_length;
 
@@ -75,6 +90,7 @@ typedef struct {
     bifit_class_identifier_t this_class;
     bifit_class_identifier_t super_class;
     bifit_class_interfaces_t interfaces;
+    bifit_class_access_flags_t access_flags;
 
 } bifit_class_t;
 
