@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define LOG_DEBUG printf
+
 void guess_java_version(char *major_version, char *target);
 
 /**

@@ -6,15 +6,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "classes_combined.h"
+
 #include "./util/bifit_string_util.h"
 #include "./util/bifit_number_util.h"
 
 typedef struct {
 
-    const uint8_t *class_identifier;
-    int class_identifier_length;
+    int major_version;
+    int minor_version;
+    int java_version;
 
-} bifit_class_identifier_t;
+} bifit_class_header_t;
 
 typedef struct {
 
@@ -43,10 +46,27 @@ typedef struct {
     uint8_t ref_type;
     int ref_index;
 
-} bifit_const_pool_entry_t;
+} bifit_constant_pool_entry_t;
 
 typedef struct {
 
+    unsigned int entry_count;
+    unsigned int size_in_bytes;
+    bifit_constant_pool_entry_t *entries;
+
+} bifit_constant_pool_t;
+
+typedef struct {
+
+    const uint8_t *class_identifier;
+    int class_identifier_length;
+
+} bifit_class_identifier_t;
+
+typedef struct {
+
+    bifit_class_header_t class_header;
+    bifit_constant_pool_t constant_pool;
     bifit_class_identifier_t this_class;
     bifit_class_identifier_t super_class;
 

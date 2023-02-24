@@ -1,26 +1,44 @@
 #include "bifit.h"
 
-void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
-    int given_const_pool_count = parse_integer_u2(8, data);
-    int real_const_pool_count = given_const_pool_count - 1;
+#include "class_header.h"
+#include "constant_pool.h"
+#include "class_identifier.h"
 
-    int byte_index = 10;
-    const_pool_entry_t entries[real_const_pool_count];
+/* prototypes */
+bifit_class_t *bifit_load_embedded_classes();
+void bifit_load_class(const uint8_t *data, bifit_class_t *out);
 
-    for (int i = 0; i < real_const_pool_count; i++) {
-        LOG_DEBUG("\nparsing const entry %d\n", i+1);
-        byte_index = parse_next_constant_pool_entry(byte_index, data, &entries[i]);
+/* impl */
+bifit_class_t *bifit_load_embedded_classes() {
+
+    unsigned int number_of_classes = bifit_embedded_class_files_size;
+
+    bifit_class_t *classes = malloc(sizeof(bifit_class_identifier_t) * number_of_classes);
+
+    for (int i = 0; i < number_of_classes; i++) {
+        uint8_t *class_file = bifit_embedded_class_files[i];
+        bifit_load_class(class_file, &classes[i]);
     }
+
+    return classes;
+}
+
+void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
+
+    out->class_header = *load_class_header(data);
+    out->constant_pool = *load_constant_pool(data);
+
+    int byte_index = BIFIT_CLASS_HEADER_SIZE_IN_BYTES + out->constant_pool.size_in_bytes;
 
     // byte_index = parse_access_flags(byte_index, data);
     byte_index += 2;
 
-    load_class_identifier(byte_index, data, entries, &(out->this_class));
+    load_class_identifier(byte_index, data, out->constant_pool.entries, &(out->this_class));
     byte_index += 2;
-    load_class_identifier(byte_index, data, entries, &(out->super_class));
+    load_class_identifier(byte_index, data, out->constant_pool.entries, &(out->super_class));
     byte_index += 2;
 
-    byte_index = parse_interfaces(byte_index, data);
-
+    //byte_index = parse_interfaces(byte_index, data);
 
 }
+
