@@ -4,30 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int parse_integer_u2(int index, const uint8_t data[]) {
-    int result = data[index];
-    result  = result << 8;
-
-    result += data[index + 1];
-
-    return result;
-}
-
-int parse_integer_u4(int index, const uint8_t data[]) {
-    int result = data[index++];
-    result = result << 8;
-
-    result += data[index++];
-    result = result << 8;
-
-    result += data[index++];
-    result = result << 8;
-
-    result += data[index];
-
-    return result;
-}
-
 /*
  * u2 access_flags
  */

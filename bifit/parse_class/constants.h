@@ -1,62 +1,30 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "helpers.h"
+#include "bifit.h"
 
-typedef struct {
+int parse_next_constant_pool_entry(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // every constant has a type (/tag)
-    uint8_t type;
+int parse_next_utf8(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // for utf8 constants
-    const uint8_t *utf8_str;
-    int utf8_str_len;
+int parse_next_integer(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // for names and descriptions
-    int name_index;
-    int desc_index;
+int parse_next_float(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // for whole numbers
-    long long_value;
+int parse_next_class_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // for floating point
-    double double_value;
+int parse_next_long(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // for class refs
-    int class_index;
-    int name_and_type_index;
+int parse_next_double(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-    // for method handles
-    uint8_t ref_type;
-    int ref_index;
+int parse_next_string(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-} const_pool_entry_t;
+int parse_next_field_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-int parse_next_constant_pool_entry(int index, const uint8_t *data, const_pool_entry_t *out);
+int parse_next_method_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-int parse_next_utf8(int index, const uint8_t *data, const_pool_entry_t *out);
+int parse_next_iface_method_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-int parse_next_integer(int index, const uint8_t *data, const_pool_entry_t *out);
+int parse_next_name_and_type(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
-int parse_next_float(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_class_ref(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_long(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_double(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_string(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_field_ref(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_method_ref(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_iface_method_ref(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_name_and_type(int index, const uint8_t *data, const_pool_entry_t *out);
-
-int parse_next_method_handle(int index, const uint8_t *data, const_pool_entry_t *out);
+int parse_next_method_handle(int index, const uint8_t *data, bifit_const_pool_entry_t *out);
 
 /**
  * Parse constant pool of given class file
@@ -71,7 +39,7 @@ int parse_constant_pool(const uint8_t data[]) {
     int index = 10;
     for (int i = 1; i < const_pool_count; i++) {
         LOG_DEBUG("reading constant pool entry %d\n", i);
-        const_pool_entry_t *entry = malloc(sizeof(const_pool_entry_t));
+        bifit_const_pool_entry_t *entry = malloc(sizeof(bifit_const_pool_entry_t));
         index = parse_next_constant_pool_entry(index, data, entry);
         LOG_DEBUG("\n");
     }
@@ -79,7 +47,7 @@ int parse_constant_pool(const uint8_t data[]) {
     return index;
 }
 
-int parse_next_constant_pool_entry(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_constant_pool_entry(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
     uint8_t tag = data[index++];
     LOG_DEBUG("constant has tag %d ", tag);
 
@@ -133,7 +101,7 @@ CONSTANT_Utf8_info {
     u1 bytes[length];
 }
 */
-int parse_next_utf8(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_utf8(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
     LOG_DEBUG("(UTF-8 constant)\n");
     int length = parse_integer_u2(index, data);
     index += 2;
@@ -157,7 +125,7 @@ CONSTANT_Integer_info {
     u4 bytes;
 }
  */
-int parse_next_integer(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_integer(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(int)\n");
 
@@ -179,7 +147,7 @@ CONSTANT_Float_info {
     u4 bytes;
 }
 */
-int parse_next_float(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_float(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(float)\n");
 
@@ -202,7 +170,7 @@ CONSTANT_Long_info {
     u4 low_bytes;
 }
 */
-int parse_next_long(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_long(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(long)\n");
 
@@ -229,7 +197,7 @@ CONSTANT_Double_info {
     u4 low_bytes;
 }
 */
-int parse_next_double(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_double(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(double)\n");
 
@@ -255,7 +223,7 @@ CONSTANT_Class_info {
     u2 name_index;
 }
  */
-int parse_next_class_ref(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_class_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(class ref)\n");
 
@@ -271,7 +239,7 @@ CONSTANT_String_info {
     u2 string_index;
 }
 */
-int parse_next_string(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_string(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(string)\n");
 
@@ -288,7 +256,7 @@ CONSTANT_???ref_info {
     u2 name_and_type_index;
 }
 */
-int parse_next_ref(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
     out->class_index = parse_integer_u2(index, data);
     index += 2;
     LOG_DEBUG("class_index was %d\n", out->class_index);
@@ -307,7 +275,7 @@ CONSTANT_Fieldref_info {
     u2 name_and_type_index;
 }
 */
-int parse_next_field_ref(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_field_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
     LOG_DEBUG("(field ref)\n");
     return parse_next_ref(index, data, out);
 }
@@ -319,7 +287,7 @@ CONSTANT_Methodref_info {
     u2 name_and_type_index;
 }
 */
-int parse_next_method_ref(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_method_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
     LOG_DEBUG("(method ref)\n");
     return parse_next_ref(index, data, out);
 }
@@ -331,7 +299,7 @@ CONSTANT_InterfaceMethodref_info {
     u2 name_and_type_index;
 }
 */
-int parse_next_iface_method_ref(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_iface_method_ref(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
     LOG_DEBUG("(interface method ref)\n");
     return parse_next_ref(index, data, out);
 }
@@ -343,7 +311,7 @@ CONSTANT_NameAndType_info {
     u2 descriptor_index;
 }
 */
-int parse_next_name_and_type(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_name_and_type(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(name and type constant)\n");
 
@@ -365,7 +333,7 @@ CONSTANT_MethodHandle_info {
     u2 reference_index;
 }
 */
-int parse_next_method_handle(int index, const uint8_t *data, const_pool_entry_t *out) {
+int parse_next_method_handle(int index, const uint8_t *data, bifit_const_pool_entry_t *out) {
 
     LOG_DEBUG("(method handle)\n");
 
