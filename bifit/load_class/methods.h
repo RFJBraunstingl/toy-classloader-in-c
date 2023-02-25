@@ -35,11 +35,11 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
 
     index = load_method_access_flags(index, data, &out->access_flags);
 
-    int name_index = parse_integer_u2(index, data);
+    unsigned int name_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
 
-    int descriptor_index = parse_integer_u2(index, data);
+    unsigned int descriptor_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(descriptor_index, entries, &out->descriptor);
     index += 2;
 
@@ -114,9 +114,15 @@ void load_method_code(bifit_method_t *method) {
 
         if (is_code_attribute_identifier(attr.name)) {
             out->max_stack = parse_integer_u2(0, attr.data);
+            LOG_DEBUG("method max_stack: %d\n", out->max_stack);
             out->max_locals = parse_integer_u2(2, attr.data);
+            LOG_DEBUG("method max_locals: %d\n", out->max_locals);
             out->byte_code_length = parse_integer_u4(4, attr.data);
+            LOG_DEBUG("code_length: %d\n", out->byte_code_length);
             out->byte_code = &attr.data[8];
+            for (int j = 0; j < out->byte_code_length; ++j) {
+
+            }
 
             unsigned int attr_data_index = 8 + out->byte_code_length;
             // exception table loading follows here
