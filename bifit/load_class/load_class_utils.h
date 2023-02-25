@@ -34,6 +34,12 @@ void load_identifier_by_name_index(unsigned int name_index, bifit_constant_pool_
     out->class_identifier_length = identifier_entry.utf8_str_len;
 }
 
+void log_bifit_identifier(bifit_identifier_t identifier) {
+    for (int i = 0; i < identifier.class_identifier_length; ++i) {
+        LOG_DEBUG("%c", identifier.class_identifier[i]);
+    }
+}
+
 /*
 attribute_info {
     u2 attribute_name_index;
@@ -45,19 +51,17 @@ unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_const
     unsigned int name_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
+    LOG_DEBUG("loading attribute ");
+    log_bifit_identifier(out->name);
+    LOG_DEBUG("\n");
 
     out->length_in_bytes = parse_integer_u4(index, data);
     index += 4;
+    LOG_DEBUG("attribute length was %d\n", out->length_in_bytes);
 
     out->data = &data[index];
 
     return index + out->length_in_bytes;
-}
-
-void log_bifit_identifier(bifit_identifier_t identifier) {
-    for (int i = 0; i < identifier.class_identifier_length; ++i) {
-        LOG_DEBUG("%c", identifier.class_identifier[i]);
-    }
 }
 
 #endif

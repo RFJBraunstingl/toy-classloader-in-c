@@ -51,6 +51,7 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
 
 
     out->attributes_count = parse_integer_u2(index, data);
+    LOG_DEBUG("method attribute count was %d\n", out->attributes_count);
     index += 2;
 
     // TODO: unify with field attributes
@@ -127,9 +128,6 @@ void load_method_code(bifit_method_t *method) {
             out->byte_code_length = parse_integer_u4(4, attr.data);
             LOG_DEBUG("code_length: %d\n", out->byte_code_length);
             out->byte_code = &attr.data[8];
-            for (int j = 0; j < out->byte_code_length; ++j) {
-
-            }
 
             unsigned int attr_data_index = 8 + out->byte_code_length;
             // exception table loading follows here
