@@ -32,9 +32,9 @@ typedef struct {
  */
 typedef struct {
 
-    int major_version;
-    int minor_version;
-    int java_version;
+    unsigned int major_version;
+    unsigned int minor_version;
+    unsigned int java_version;
 
 } bifit_class_header_t;
 
@@ -45,11 +45,11 @@ typedef struct {
 
     // for utf8 constants
     const uint8_t *utf8_str;
-    int utf8_str_len;
+    unsigned int utf8_str_len;
 
     // for names and descriptions
-    int name_index;
-    int desc_index;
+    unsigned int name_index;
+    unsigned int desc_index;
 
     // for whole numbers
     long long_value;
@@ -58,18 +58,18 @@ typedef struct {
     double double_value;
 
     // for class refs
-    int class_index;
-    int name_and_type_index;
+    unsigned int class_index;
+    unsigned int name_and_type_index;
 
     // for method handles
     uint8_t ref_type;
-    int ref_index;
+    unsigned int ref_index;
 
 } bifit_constant_pool_entry_t;
 
 typedef struct {
 
-    int entry_count;
+    unsigned int entry_count;
     unsigned int size_in_bytes;
     bifit_constant_pool_entry_t *entries;
 
@@ -91,7 +91,7 @@ typedef struct {
 
 typedef struct {
 
-    int interface_count;
+    unsigned int interface_count;
     unsigned int size_in_bytes;
     bifit_identifier_t *identifiers;
 
@@ -116,14 +116,14 @@ typedef struct {
     bifit_field_access_flags_t access_flags;
     bifit_identifier_t name;
     bifit_identifier_t descriptor;
-    int attributes_count;
+    unsigned int attributes_count;
     bifit_attribute_t *attributes;
 
 } bifit_field_t;
 
 typedef struct {
 
-    int field_count;
+    unsigned int field_count;
     unsigned int size_in_bytes;
     bifit_field_t *field_array;
 
@@ -148,14 +148,28 @@ typedef struct {
 
 typedef struct {
 
+    unsigned int max_stack;
+    unsigned int max_locals;
+    unsigned int byte_code_length;
+    uint8_t *byte_code;
+
+} bifit_method_code_t;
+
+typedef struct {
+
     bifit_method_access_flags_t access_flags;
-    bifit_identifier_t identifier;
+    bifit_identifier_t name;
+    bifit_identifier_t descriptor;
+    unsigned int attributes_count;
+    bifit_attribute_t *attributes;
+
+    bifit_method_code_t code;
 
 } bifit_method_t;
 
 typedef struct {
 
-    int method_count;
+    unsigned int method_count;
     unsigned int size_in_bytes;
     bifit_method_t *method_array;
 

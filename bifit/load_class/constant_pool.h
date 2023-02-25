@@ -32,7 +32,7 @@ int load_next_method_handle(int index, const uint8_t *data, bifit_constant_pool_
 #define BIFIT_CONSTANT_POOL_START_INDEX 8
 void load_constant_pool(const uint8_t data[], bifit_constant_pool_t *out) {
 
-    int const_pool_size = parse_integer_u2(BIFIT_CONSTANT_POOL_START_INDEX, data);
+    unsigned int const_pool_size = parse_integer_u2(BIFIT_CONSTANT_POOL_START_INDEX, data);
     unsigned int number_of_entries = const_pool_size - 1;
     LOG_DEBUG("dealing with a constant pool of size %d\n", number_of_entries);
 

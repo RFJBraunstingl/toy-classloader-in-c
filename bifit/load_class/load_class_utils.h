@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 
-int parse_integer_u2(unsigned int index, const uint8_t data[]) {
-    int result = data[index];
+unsigned int parse_integer_u2(unsigned int index, const uint8_t data[]) {
+    unsigned int result = data[index];
     result  = result << 8;
 
     result += data[index + 1];
@@ -12,8 +12,8 @@ int parse_integer_u2(unsigned int index, const uint8_t data[]) {
     return result;
 }
 
-int parse_integer_u4(unsigned int index, const uint8_t data[]) {
-    int result = data[index++];
+unsigned int parse_integer_u4(unsigned int index, const uint8_t data[]) {
+    unsigned int result = data[index++];
     result = result << 8;
 
     result += data[index++];
@@ -42,7 +42,7 @@ attribute_info {
 }
 */
 unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_attribute_t *out) {
-    int name_index = parse_integer_u2(index, data);
+    unsigned int name_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
 

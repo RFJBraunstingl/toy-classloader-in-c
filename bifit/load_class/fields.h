@@ -44,6 +44,8 @@ unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_cons
     index += 2;
 
     out->attributes_count = parse_integer_u2(index, data);
+    index += 2;
+
     out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
     for (int i = 0; i < out->attributes_count; ++i) {
         index = load_attribute(index, data, entries, &out->attributes[i]);

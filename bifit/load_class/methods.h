@@ -1,6 +1,9 @@
 #include "bifit.h"
+#include "load_class_utils.h"
 
 unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out);
+unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, bifit_method_access_flags_t *out);
+void load_method_code(bifit_method_t *out);
 
 void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_methods_t *out) {
 
@@ -22,5 +25,85 @@ method_info {
 */
 unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out) {
 
+    index = load_method_access_flags(index, data, &out->access_flags);
 
+    int name_index = parse_integer_u2(index, data);
+    load_identifier_by_name_index(name_index, entries, &out->name);
+    index += 2;
+
+    int descriptor_index = parse_integer_u2(index, data);
+    load_identifier_by_name_index(descriptor_index, entries, &out->descriptor);
+    index += 2;
+
+    out->attributes_count = parse_integer_u2(index, data);
+    index += 2;
+
+    // TODO: unify with field attributes
+    out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
+    for (int i = 0; i < out->attributes_count; ++i) {
+        index = load_attribute(index, data, entries, &out->attributes[i]);
+    }
+
+    load_method_code(out);
+
+    return index;
+
+}
+
+unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, bifit_method_access_flags_t *out) {
+
+    uint8_t msb = data[index];
+    uint8_t lsb = data[index + 1];
+
+    out->is_public = (0x01 & lsb) ? true : false;
+    out->is_private = (0x02 & lsb) ? true : false;
+    out->is_protected = (0x04 & lsb) ? true : false;
+    out->is_static = (0x08 & lsb) ? true : false;
+    out->is_final = (0x10 & lsb) ? true : false;
+    out->is_synchronized = (0x20 & lsb) ? true : false;
+    out->is_bridge = (0x40 & lsb) ? true : false;
+    out->is_varargs = (0x80 & lsb) ? true : false;
+    out->is_native = (0x01 & msb) ? true : false;
+    out->is_abstract = (0x04 & msb) ? true : false;
+    out->is_strict = (0x08 & msb) ? true : false;
+    out->is_synthetic = (0x10 & msb) ? true : false;
+
+    return index + 2;
+}
+
+int is_code_attribute_identifier(bifit_identifier_t identifier) {
+    return identifier.class_identifier_length == 4 &&
+        identifier.class_identifier[0] == 'C' &&
+        identifier.class_identifier[1] == 'o' &&
+        identifier.class_identifier[2] == 'd' &&
+        identifier.class_identifier[3] == 'e';
+}
+
+/*
+Code_attribute {
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 max_stack;
+    u2 max_locals;
+    u4 code_length;
+    u1 code[code_length];
+    u2 exception_table_length;
+    {   u2 start_pc;
+        u2 end_pc;
+        u2 handler_pc;
+        u2 catch_type;
+    } exception_table[exception_table_length];
+    u2 attributes_count;
+    attribute_info attributes[attributes_count];
+}
+*/
+void load_method_code(bifit_method_t *out) {
+    for (int i = 0; i < out->attributes_count; ++i) {
+        bifit_attribute_t attr = out->attributes[i];
+
+        if (is_code_attribute_identifier(attr.name)) {
+            unsigned int attr_data_index = 0;
+            out->max_stack
+        }
+    }
 }
