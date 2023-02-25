@@ -15,14 +15,14 @@
 typedef struct {
 
     const uint8_t *class_identifier;
-    int class_identifier_length;
+    unsigned int class_identifier_length;
 
 } bifit_identifier_t;
 
 typedef struct {
 
     bifit_identifier_t name;
-    int length_in_bytes;
+    unsigned int length_in_bytes;
     const uint8_t *data;
 
 } bifit_attribute_t;

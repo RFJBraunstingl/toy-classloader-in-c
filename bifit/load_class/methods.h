@@ -3,7 +3,7 @@
 
 unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out);
 unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, bifit_method_access_flags_t *out);
-void load_method_code(bifit_method_t *out);
+void load_method_code(bifit_method_t *method);
 
 void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_methods_t *out) {
 
@@ -35,14 +35,15 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
 
     index = load_method_access_flags(index, data, &out->access_flags);
 
-    unsigned int name_index = parse_integer_u2(index, data);
+    unsigned int name_index = parse_integer_u2(index, data) - 1;
+    LOG_DEBUG("load_method name_index was %d\n", name_index);
     load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
     LOG_DEBUG("loading method ");
     log_bifit_identifier(out->name);
     LOG_DEBUG("\n");
 
-    unsigned int descriptor_index = parse_integer_u2(index, data);
+    unsigned int descriptor_index = parse_integer_u2(index, data) - 1;
     load_identifier_by_name_index(descriptor_index, entries, &out->descriptor);
     index += 2;
     LOG_DEBUG("descriptor ");
