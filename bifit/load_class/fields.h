@@ -20,6 +20,7 @@ void load_fields(unsigned int start_index, const uint8_t *data, bifit_class_t *o
     }
 
     out->fields.size_in_bytes = index - start_index;
+    LOG_DEBUG("\n");
 }
 
 /*

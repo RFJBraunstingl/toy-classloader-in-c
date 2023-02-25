@@ -28,7 +28,8 @@ unsigned int parse_integer_u4(unsigned int index, const uint8_t data[]) {
 }
 
 void load_identifier_by_name_index(unsigned int name_index, bifit_constant_pool_entry_t entries[], bifit_identifier_t *out) {
-    bifit_constant_pool_entry_t identifier_entry = entries[name_index];
+    // NOTE: indexing in constant pool starts with 1!
+    bifit_constant_pool_entry_t identifier_entry = entries[name_index - 1];
     // TODO: check if actually utf8 constant?
     out->class_identifier = identifier_entry.utf8_str;
     out->class_identifier_length = identifier_entry.utf8_str_len;
