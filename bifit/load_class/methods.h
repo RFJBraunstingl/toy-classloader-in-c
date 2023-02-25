@@ -130,6 +130,11 @@ void load_method_code(bifit_method_t *method) {
             LOG_DEBUG("code_length: %d\n", out->byte_code_length);
             out->byte_code = &attr.data[8];
 
+            // if PRINT_BYTE_CODE
+            for (int j = 0; j < out->byte_code_length; ++j) {
+                LOG_DEBUG("0x%02x\n", out->byte_code[j]);
+            }
+
             unsigned int attr_data_index = 8 + out->byte_code_length;
             // exception table loading follows here
         }
