@@ -6,6 +6,7 @@
 #include "class_identifier.h"
 #include "interfaces.h"
 #include "fields.h"
+#include "methods.h"
 
 /* prototypes */
 bifit_class_t *bifit_load_embedded_classes();
@@ -47,6 +48,7 @@ void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
     load_fields(byte_index, data, out);
     byte_index += out->fields.size_in_bytes;
 
-
+    load_methods(byte_index, data, out->constant_pool.entries, &out->methods);
+    byte_index += out->methods.size_in_bytes;
 }
 

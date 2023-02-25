@@ -9,7 +9,15 @@ void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_
 
     unsigned int index = start_index;
 
+    out->method_count = parse_integer_u2(index, data);
+    LOG_DEBUG("load_methods num of methods: %d\n", out->method_count);
+    index += 2;
 
+    out->method_array = malloc(sizeof(bifit_method_t) * out->method_count);
+
+    for (int i = 0; i < out->method_count; ++i) {
+        index = load_method(index, data, entries, &out->method_array[i]);
+    }
 
     out->size_in_bytes = start_index - index;
 }
@@ -71,14 +79,6 @@ unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, b
     return index + 2;
 }
 
-int is_code_attribute_identifier(bifit_identifier_t identifier) {
-    return identifier.class_identifier_length == 4 &&
-        identifier.class_identifier[0] == 'C' &&
-        identifier.class_identifier[1] == 'o' &&
-        identifier.class_identifier[2] == 'd' &&
-        identifier.class_identifier[3] == 'e';
-}
-
 /*
 Code_attribute {
     u2 attribute_name_index;
@@ -97,13 +97,29 @@ Code_attribute {
     attribute_info attributes[attributes_count];
 }
 */
-void load_method_code(bifit_method_t *out) {
-    for (int i = 0; i < out->attributes_count; ++i) {
-        bifit_attribute_t attr = out->attributes[i];
+int is_code_attribute_identifier(bifit_identifier_t identifier) {
+    return identifier.class_identifier_length == 4 &&
+           identifier.class_identifier[0] == 'C' &&
+           identifier.class_identifier[1] == 'o' &&
+           identifier.class_identifier[2] == 'd' &&
+           identifier.class_identifier[3] == 'e';
+}
+
+void load_method_code(bifit_method_t *method) {
+
+    bifit_method_code_t *out = &method->code;
+
+    for (int i = 0; i < method->attributes_count; ++i) {
+        bifit_attribute_t attr = method->attributes[i];
 
         if (is_code_attribute_identifier(attr.name)) {
-            unsigned int attr_data_index = 0;
-            out->max_stack
+            out->max_stack = parse_integer_u2(0, attr.data);
+            out->max_locals = parse_integer_u2(2, attr.data);
+            out->byte_code_length = parse_integer_u4(4, attr.data);
+            out->byte_code = &attr.data[8];
+
+            unsigned int attr_data_index = 8 + out->byte_code_length;
+            // exception table loading follows here
         }
     }
 }

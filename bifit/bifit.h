@@ -151,7 +151,7 @@ typedef struct {
     unsigned int max_stack;
     unsigned int max_locals;
     unsigned int byte_code_length;
-    uint8_t *byte_code;
+    const uint8_t *byte_code;
 
 } bifit_method_code_t;
 
