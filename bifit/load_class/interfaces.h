@@ -22,4 +22,5 @@ void load_interfaces(unsigned int start_index, const uint8_t data[], bifit_class
     }
 
     out->interfaces.size_in_bytes = byte_index - start_index;
+    LOG_DEBUG("\n");
 }

@@ -51,7 +51,13 @@ unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_const
 
     out->data = &data[index];
 
-    return index;
+    return index + out->length_in_bytes;
+}
+
+void log_bifit_identifier(bifit_identifier_t identifier) {
+    for (int i = 0; i < identifier.class_identifier_length; ++i) {
+        LOG_DEBUG("%c", identifier.class_identifier[i]);
+    }
 }
 
 #endif

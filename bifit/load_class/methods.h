@@ -38,10 +38,17 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
     unsigned int name_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
+    LOG_DEBUG("loading method ");
+    log_bifit_identifier(out->name);
+    LOG_DEBUG("\n");
 
     unsigned int descriptor_index = parse_integer_u2(index, data);
     load_identifier_by_name_index(descriptor_index, entries, &out->descriptor);
     index += 2;
+    LOG_DEBUG("descriptor ");
+    log_bifit_identifier(out->descriptor);
+    LOG_DEBUG("\n");
+
 
     out->attributes_count = parse_integer_u2(index, data);
     index += 2;
@@ -54,8 +61,8 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
 
     load_method_code(out);
 
+    LOG_DEBUG("\n");
     return index;
-
 }
 
 unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, bifit_method_access_flags_t *out) {
