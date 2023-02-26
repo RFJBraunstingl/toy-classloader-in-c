@@ -56,11 +56,7 @@ attribute_info {
     u1 info[attribute_length];
 }
 */
-unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t *entries, bifit_attribute_t *out, bifit_class_t *clazz) {
-
-    LOG_DEBUG("class identifier: ");
-    log_bifit_identifier(&(clazz->this_class));
-    LOG_DEBUG("\n");
+unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t *entries, bifit_attribute_t *out) {
 
     unsigned int name_index = parse_integer_u2(index, data);
     LOG_DEBUG("name_index: %d\n", name_index);
@@ -70,19 +66,11 @@ unsigned int load_attribute(unsigned int index, const uint8_t *data, bifit_const
     log_bifit_identifier(&(out->name));
     LOG_DEBUG("\n");
 
-    LOG_DEBUG("class identifier: ");
-    log_bifit_identifier(&(clazz->this_class));
-    LOG_DEBUG("\n");
-
     out->length_in_bytes = parse_integer_u4(index, data);
     index += 4;
     LOG_DEBUG("attribute length was %d\n", out->length_in_bytes);
 
     out->data = &data[index];
-
-    LOG_DEBUG("class identifier: ");
-    log_bifit_identifier(&(clazz->this_class));
-    LOG_DEBUG("\n");
 
     return index + out->length_in_bytes;
 }

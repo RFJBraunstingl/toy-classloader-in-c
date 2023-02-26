@@ -1,11 +1,11 @@
 #include "bifit.h"
 #include "load_class_utils.h"
 
-unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out, bifit_class_t *clazz);
+unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out);
 unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, bifit_method_access_flags_t *out);
 void load_method_code(bifit_method_t *method);
 
-void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_methods_t *out, bifit_class_t *clazz) {
+void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_methods_t *out) {
 
     unsigned int index = start_index;
 
@@ -16,7 +16,7 @@ void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_
     out->method_array = malloc(sizeof(struct bifit_method) * out->method_count);
 
     for (int i = 0; i < out->method_count; ++i) {
-        index = load_method(index, data, entries, &(out->method_array[i]), clazz);
+        index = load_method(index, data, entries, &(out->method_array[i]));
     }
 
     out->size_in_bytes = start_index - index;
@@ -31,7 +31,7 @@ method_info {
     attribute_info attributes[attributes_count];
 }
 */
-unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out, bifit_class_t *clazz) {
+unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out) {
 
     index = load_method_access_flags(index, data, &(out->access_flags));
 
@@ -58,28 +58,14 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
     LOG_DEBUG("method attribute count was %d\n", out->attributes_count);
     index += 2;
 
-    LOG_DEBUG("class identifier: ");
-    log_bifit_identifier(&(clazz->this_class));
-    LOG_DEBUG("\n");
-
-    // TODO: BUG - this overwrites memory areas!
     // TODO: unify with field attributes
     out->attributes = malloc(sizeof(struct bifit_attribute) * out->attributes_count);
 
-    LOG_DEBUG("class identifier: ");
-    log_bifit_identifier(&(clazz->this_class));
-    LOG_DEBUG("\n");
-
     for (int i = 0; i < out->attributes_count; ++i) {
-
-        LOG_DEBUG("in loop - class id: ");
-        log_bifit_identifier(&(clazz->this_class));
-        LOG_DEBUG("\n");
-
-        index = load_attribute(index, data, entries, &(out->attributes[i]), clazz);
+        index = load_attribute(index, data, entries, &(out->attributes[i]));
     }
 
-    // load_method_code(out);
+    load_method_code(out);
 
     LOG_DEBUG("\n");
     return index;

@@ -17,7 +17,7 @@ bifit_class_t *bifit_load_embedded_classes() {
 
     unsigned int number_of_classes = bifit_embedded_class_files_size;
 
-    bifit_class_t *classes = malloc(sizeof(struct bifit_identifier) * number_of_classes);
+    bifit_class_t *classes = malloc(sizeof(struct bifit_class) * number_of_classes);
 
     for (int i = 0; i < number_of_classes; i++) {
         uint8_t *class_file = bifit_embedded_class_files[i];
@@ -48,7 +48,7 @@ void bifit_load_class(const uint8_t *data, bifit_class_t *out) {
     load_fields(byte_index, data, out);
     byte_index += out->fields.size_in_bytes;
 
-    load_methods(byte_index, data, out->constant_pool.entries, &(out->methods), out);
+    load_methods(byte_index, data, out->constant_pool.entries, &(out->methods));
     byte_index += out->methods.size_in_bytes;
 
     LOG_DEBUG("after loading methods ");
