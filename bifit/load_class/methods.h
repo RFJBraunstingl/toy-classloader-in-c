@@ -13,7 +13,7 @@ void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_
     LOG_DEBUG("load_methods num of methods: %d\n", out->method_count);
     index += 2;
 
-    out->method_array = malloc(sizeof(bifit_method_t) * out->method_count);
+    out->method_array = malloc(sizeof(struct bifit_method) * out->method_count);
 
     for (int i = 0; i < out->method_count; ++i) {
         index = load_method(index, data, entries, &(out->method_array[i]), clazz);
@@ -64,7 +64,7 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
 
     // TODO: BUG - this overwrites memory areas!
     // TODO: unify with field attributes
-    out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
+    out->attributes = malloc(sizeof(struct bifit_attribute) * out->attributes_count);
 
     LOG_DEBUG("class identifier: ");
     log_bifit_identifier(&(clazz->this_class));

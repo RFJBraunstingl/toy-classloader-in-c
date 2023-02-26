@@ -37,7 +37,7 @@ void load_constant_pool(const uint8_t data[], bifit_constant_pool_t *out) {
     LOG_DEBUG("dealing with a constant pool of size %d\n", number_of_entries);
 
     out->entries = malloc(
-            sizeof(bifit_constant_pool_entry_t) * number_of_entries
+            sizeof(struct bifit_constant_pool_entry) * number_of_entries
     );
     out->entry_count = number_of_entries;
 

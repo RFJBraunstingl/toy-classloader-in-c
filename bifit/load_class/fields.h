@@ -13,7 +13,7 @@ void load_fields(unsigned int start_index, const uint8_t *data, bifit_class_t *o
     LOG_DEBUG("load_fields num of fields: %d\n", out->fields.field_count);
     index += 2;
 
-    out->fields.field_array = malloc(sizeof(bifit_field_t) * out->fields.field_count);
+    out->fields.field_array = malloc(sizeof(struct bifit_field) * out->fields.field_count);
 
     for (int i = 0; i < out->fields.field_count; ++i) {
         index = load_next_field(index, data, out->constant_pool.entries, &out->fields.field_array[i]);
@@ -47,7 +47,7 @@ unsigned int load_next_field(unsigned int index, const uint8_t *data, bifit_cons
     out->attributes_count = parse_integer_u2(index, data);
     index += 2;
 
-    out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
+    out->attributes = malloc(sizeof(struct bifit_attribute) * out->attributes_count);
     for (int i = 0; i < out->attributes_count; ++i) {
         index = load_attribute(index, data, entries, &out->attributes[i], NULL);
     }

@@ -12,14 +12,14 @@
 /**
  * generic types
  */
-typedef struct {
+typedef struct bifit_identifier {
 
     const uint8_t *identifier;
     unsigned int identifier_length;
 
 } bifit_identifier_t;
 
-typedef struct {
+typedef struct bifit_attribute {
 
     bifit_identifier_t name;
     unsigned int length_in_bytes;
@@ -30,7 +30,7 @@ typedef struct {
 /**
  * actual class types
  */
-typedef struct {
+typedef struct bifit_class_header {
 
     unsigned int major_version;
     unsigned int minor_version;
@@ -38,7 +38,7 @@ typedef struct {
 
 } bifit_class_header_t;
 
-typedef struct {
+typedef struct bifit_constant_pool_entry {
 
     // every constant has a type (/tag)
     uint8_t type;
@@ -67,7 +67,7 @@ typedef struct {
 
 } bifit_constant_pool_entry_t;
 
-typedef struct {
+typedef struct bifit_constant_pool {
 
     unsigned int entry_count;
     unsigned int size_in_bytes;
@@ -75,7 +75,7 @@ typedef struct {
 
 } bifit_constant_pool_t;
 
-typedef struct {
+typedef struct bifit_class_access_flags {
 
     bool is_public;
     bool is_final;
@@ -89,7 +89,7 @@ typedef struct {
 
 } bifit_class_access_flags_t;
 
-typedef struct {
+typedef struct bifit_class_interfaces {
 
     unsigned int interface_count;
     unsigned int size_in_bytes;
@@ -97,7 +97,7 @@ typedef struct {
 
 } bifit_class_interfaces_t;
 
-typedef struct {
+typedef struct bifit_field_access_flags {
 
     bool is_public;
     bool is_private;
@@ -111,7 +111,7 @@ typedef struct {
 
 } bifit_field_access_flags_t;
 
-typedef struct {
+typedef struct bifit_field {
 
     bifit_field_access_flags_t access_flags;
     bifit_identifier_t name;
@@ -121,7 +121,7 @@ typedef struct {
 
 } bifit_field_t;
 
-typedef struct {
+typedef struct bifit_fields {
 
     unsigned int field_count;
     unsigned int size_in_bytes;
@@ -129,7 +129,7 @@ typedef struct {
 
 } bifit_fields_t;
 
-typedef struct {
+typedef struct bifit_method_access_flags {
 
     bool is_public;
     bool is_private;
@@ -146,7 +146,7 @@ typedef struct {
 
 } bifit_method_access_flags_t;
 
-typedef struct {
+typedef struct bifit_method_code {
 
     unsigned int max_stack;
     unsigned int max_locals;
@@ -155,7 +155,7 @@ typedef struct {
 
 } bifit_method_code_t;
 
-typedef struct {
+typedef struct bifit_method {
 
     bifit_method_access_flags_t access_flags;
     bifit_identifier_t name;
@@ -167,7 +167,7 @@ typedef struct {
 
 } bifit_method_t;
 
-typedef struct {
+typedef struct bifit_methods {
 
     unsigned int method_count;
     unsigned int size_in_bytes;
@@ -178,7 +178,7 @@ typedef struct {
 /**
  * putting it all together
  */
-typedef struct {
+typedef struct bifit_class {
 
     bifit_class_header_t class_header;
     bifit_constant_pool_t constant_pool;
