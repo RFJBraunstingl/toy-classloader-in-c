@@ -58,8 +58,18 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
     LOG_DEBUG("method attribute count was %d\n", out->attributes_count);
     index += 2;
 
+    LOG_DEBUG("class identifier: ");
+    log_bifit_identifier(&(clazz->this_class));
+    LOG_DEBUG("\n");
+
+    // TODO: BUG - this overwrites memory areas!
     // TODO: unify with field attributes
     out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
+
+    LOG_DEBUG("class identifier: ");
+    log_bifit_identifier(&(clazz->this_class));
+    LOG_DEBUG("\n");
+
     for (int i = 0; i < out->attributes_count; ++i) {
 
         LOG_DEBUG("in loop - class id: ");
