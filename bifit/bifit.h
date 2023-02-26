@@ -14,8 +14,8 @@
  */
 typedef struct {
 
-    const uint8_t *class_identifier;
-    unsigned int class_identifier_length;
+    const uint8_t *identifier;
+    unsigned int identifier_length;
 
 } bifit_identifier_t;
 

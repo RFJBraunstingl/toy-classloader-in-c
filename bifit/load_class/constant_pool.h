@@ -47,7 +47,7 @@ void load_constant_pool(const uint8_t data[], bifit_constant_pool_t *out) {
         byte_index = load_next_constant_pool_entry(
                 byte_index,
                 data,
-                &out->entries[i - 1]
+                &(out->entries[i - 1])
         );
         LOG_DEBUG("\n");
     }

@@ -36,6 +36,7 @@ function(EmbedManifestFile path)
     # get the identifier
     string(REPLACE "Main-Class: " "" main_class_identifier ${main_class_line})
     string(REGEX REPLACE "\n" "" main_class_identifier "${main_class_identifier}")
+    string(REGEX REPLACE "\\." "/" main_class_identifier "${main_class_identifier}")
     message("found main class identifier: ${main_class_identifier}")
 
     # make the identifier accessible in C

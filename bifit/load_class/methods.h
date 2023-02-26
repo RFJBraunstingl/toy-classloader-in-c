@@ -1,11 +1,11 @@
 #include "bifit.h"
 #include "load_class_utils.h"
 
-unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out);
+unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out, bifit_class_t *clazz);
 unsigned int load_method_access_flags(unsigned int index, const uint8_t *data, bifit_method_access_flags_t *out);
 void load_method_code(bifit_method_t *method);
 
-void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_methods_t *out) {
+void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_methods_t *out, bifit_class_t *clazz) {
 
     unsigned int index = start_index;
 
@@ -16,7 +16,7 @@ void load_methods(unsigned int start_index, const uint8_t *data, bifit_constant_
     out->method_array = malloc(sizeof(bifit_method_t) * out->method_count);
 
     for (int i = 0; i < out->method_count; ++i) {
-        index = load_method(index, data, entries, &out->method_array[i]);
+        index = load_method(index, data, entries, &(out->method_array[i]), clazz);
     }
 
     out->size_in_bytes = start_index - index;
@@ -31,23 +31,26 @@ method_info {
     attribute_info attributes[attributes_count];
 }
 */
-unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out) {
+unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant_pool_entry_t entries[], bifit_method_t *out, bifit_class_t *clazz) {
 
-    index = load_method_access_flags(index, data, &out->access_flags);
+    index = load_method_access_flags(index, data, &(out->access_flags));
 
     unsigned int name_index = parse_integer_u2(index, data);
-    LOG_DEBUG("load_method name_index was %d\n", name_index);
-    load_identifier_by_name_index(name_index, entries, &out->name);
     index += 2;
+
+    LOG_DEBUG("load_method name_index was %d\n", name_index);
+    load_identifier_by_name_index(name_index, entries, &(out->name));
+
     LOG_DEBUG("loading method ");
-    log_bifit_identifier(out->name);
+    log_bifit_identifier(&(out->name));
     LOG_DEBUG("\n");
 
     unsigned int descriptor_index = parse_integer_u2(index, data);
-    load_identifier_by_name_index(descriptor_index, entries, &out->descriptor);
     index += 2;
+    load_identifier_by_name_index(descriptor_index, entries, &(out->descriptor));
+
     LOG_DEBUG("descriptor ");
-    log_bifit_identifier(out->descriptor);
+    log_bifit_identifier(&(out->descriptor));
     LOG_DEBUG("\n");
 
 
@@ -58,10 +61,15 @@ unsigned int load_method(unsigned int index, const uint8_t *data, bifit_constant
     // TODO: unify with field attributes
     out->attributes = malloc(sizeof(bifit_attribute_t) * out->attributes_count);
     for (int i = 0; i < out->attributes_count; ++i) {
-        index = load_attribute(index, data, entries, &out->attributes[i]);
+
+        LOG_DEBUG("in loop - class id: ");
+        log_bifit_identifier(&(clazz->this_class));
+        LOG_DEBUG("\n");
+
+        index = load_attribute(index, data, entries, &(out->attributes[i]), clazz);
     }
 
-    load_method_code(out);
+    // load_method_code(out);
 
     LOG_DEBUG("\n");
     return index;
@@ -106,12 +114,12 @@ Code_attribute {
     attribute_info attributes[attributes_count];
 }
 */
-int is_code_attribute_identifier(bifit_identifier_t identifier) {
-    return identifier.class_identifier_length == 4 &&
-           identifier.class_identifier[0] == 'C' &&
-           identifier.class_identifier[1] == 'o' &&
-           identifier.class_identifier[2] == 'd' &&
-           identifier.class_identifier[3] == 'e';
+int is_code_attribute_identifier(bifit_identifier_t *identifier) {
+    return identifier->identifier_length == 4 &&
+           identifier->identifier[0] == 'C' &&
+           identifier->identifier[1] == 'o' &&
+           identifier->identifier[2] == 'd' &&
+           identifier->identifier[3] == 'e';
 }
 
 void load_method_code(bifit_method_t *method) {
@@ -121,7 +129,7 @@ void load_method_code(bifit_method_t *method) {
     for (int i = 0; i < method->attributes_count; ++i) {
         bifit_attribute_t attr = method->attributes[i];
 
-        if (is_code_attribute_identifier(attr.name)) {
+        if (is_code_attribute_identifier(&(attr.name))) {
             out->max_stack = parse_integer_u2(0, attr.data);
             LOG_DEBUG("method max_stack: %d\n", out->max_stack);
             out->max_locals = parse_integer_u2(2, attr.data);
@@ -132,7 +140,7 @@ void load_method_code(bifit_method_t *method) {
 
             // if PRINT_BYTE_CODE
             for (int j = 0; j < out->byte_code_length; ++j) {
-                LOG_DEBUG("0x%02x\n", out->byte_code[j]);
+                // LOG_DEBUG("0x%02x\n", out->byte_code[j]);
             }
 
             unsigned int attr_data_index = 8 + out->byte_code_length;
